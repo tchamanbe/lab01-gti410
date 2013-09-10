@@ -27,6 +27,9 @@ import javax.swing.JDialog;
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
 
+import view.CMYKColorMediator;
+import view.ColorDialogResult;
+import view.ColorSlider;
 import model.Pixel;
 
 /**
@@ -117,7 +120,25 @@ public class ColorDialog extends JDialog {
 	}
 	
 	private JPanel createCMYKPanel(ColorDialogResult result, int imageWidths) {	
+		cmykMediator = new CMYKColorMediator(result, imageWidths, 30);
+		
 		JPanel panel = new JPanel();
+		panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+		ColorSlider csCyan = new ColorSlider("C:", result.getPixel().getCyan(), cmykMediator.getRedImage());
+		ColorSlider csMagenta = new ColorSlider("M:", result.getPixel().getMagenta(), cmykMediator.getGreenImage());
+		ColorSlider csYellow = new ColorSlider("Y:", result.getPixel().getYellow(), cmykMediator.getBlueImage());
+		ColorSlider csBlack = new ColorSlider("K:", result.getPixel().getBlack(), cmykMediator.getRedImage());
+		
+		cmykMediator.setcyanCS(csCyan);
+		cmykMediator.setmagentaCS(csMagenta);
+		cmykMediator.setyellowCS(csYellow);
+		cmykMediator.setblackCS(csBlack);
+		
+		panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+		panel.add(csCyan);
+		panel.add(csMagenta);
+		panel.add(csYellow);
+		panel.add(csBlack);
 		
 		return panel;
 	}
