@@ -53,12 +53,12 @@ class HSVColorMediator extends Object implements SliderObserver, ObserverIF {
 			updateSaturation = true;
 			updateValue = true;
 		}
-		if (s == saturationCS && v/255 != saturation) {
+		if (s == saturationCS && (float)v/255 != saturation) {
 			saturation = (float)v/255;
 			updateHue = true;
 			updateValue = true;
 		}
-		if (s == valueCS && v/255 != value) {
+		if (s == valueCS && (float)v/255 != value) {
 			value = (float)v/255;
 			updateHue = true;
 			updateSaturation = true;
