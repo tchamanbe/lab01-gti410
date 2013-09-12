@@ -118,7 +118,7 @@ public class ColorDialog extends JDialog {
 	}
 	
 	private JPanel createCMYKPanel(ColorDialogResult result, int imageWidths) {		
-		
+	
 		cmykMediator = new CMYKColorMediator(result, imageWidths, 30);
 		
 		JPanel panel = new JPanel();
