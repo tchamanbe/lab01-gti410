@@ -41,6 +41,7 @@ public class ColorDialog extends JDialog {
 	private JButton okButton;
 	private RGBColorMediator rgbMediator;
 	private HSVColorMediator hsvMediator;
+	private CMYKColorMediator cmykMediator;
 	private ColorDialogResult result;
 	
 	static public Pixel getColor(Frame owner, Pixel color, int imageWidths) {
@@ -117,7 +118,26 @@ public class ColorDialog extends JDialog {
 	}
 	
 	private JPanel createCMYKPanel(ColorDialogResult result, int imageWidths) {		
+		
+		cmykMediator = new CMYKColorMediator(result, imageWidths, 30);
+		
 		JPanel panel = new JPanel();
+		panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+		ColorSlider csCyan = new ColorSlider("C:", (int)(cmykMediator.getCyan()*255), cmykMediator.getCyanImage());
+		ColorSlider csMagenta = new ColorSlider("M:", (int)(cmykMediator.getMagenta()*255), cmykMediator.getMagentaImage());
+		ColorSlider csYellow = new ColorSlider("Y:", (int)(cmykMediator.getYellow()*255), cmykMediator.getYellowImage());
+		ColorSlider csDark = new ColorSlider("K:", (int)(cmykMediator.getDark()*255), cmykMediator.getDarkImage());
+		
+		cmykMediator.setCyanCS(csCyan);
+		cmykMediator.setMagentaCS(csMagenta);
+		cmykMediator.setYellowCS(csYellow);
+		cmykMediator.setDarkCS(csDark);
+				
+		panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+		panel.add(csCyan);
+		panel.add(csMagenta);
+		panel.add(csYellow);
+		panel.add(csDark);
 	
 		return panel;
 	}
