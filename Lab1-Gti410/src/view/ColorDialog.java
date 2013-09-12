@@ -38,6 +38,7 @@ import model.Pixel;
  */
 @SuppressWarnings("serial")
 public class ColorDialog extends JDialog {
+	
 	private JButton okButton;
 	private RGBColorMediator rgbMediator;
 	private HSVColorMediator hsvMediator;
@@ -96,7 +97,8 @@ public class ColorDialog extends JDialog {
 		getContentPane().add(mainPanel, BorderLayout.CENTER);
 	}
 
-	private JPanel createRGBPanel(ColorDialogResult result, int imageWidths) {	
+	private JPanel createRGBPanel(ColorDialogResult result, int imageWidths) {
+		
 		rgbMediator = new RGBColorMediator(result, imageWidths, 30);
 		
 		JPanel panel = new JPanel();
