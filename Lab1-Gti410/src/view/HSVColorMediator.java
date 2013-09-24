@@ -55,10 +55,16 @@ class HSVColorMediator extends Object implements SliderObserver, ObserverIF {
 		else{
 			this.saturation = delta/max;
 		}
-		if(redTemp==max) this.hue = 60 * (((greenTemp-blueTemp)/delta)%6);
-		else if(greenTemp==max) this.hue = 60 * (((blueTemp-redTemp)/delta)+2);
-		else this.hue = 60 * (((redTemp-greenTemp)/delta)+4);
-
+		if(delta==0){
+			this.hue=0;
+		}
+		else{
+			if(redTemp==max) this.hue = 60 * (((greenTemp-blueTemp)/delta)%6);
+			else if(greenTemp==max) this.hue = 60 * (((blueTemp-redTemp)/delta)+2);
+			else this.hue = 60 * (((redTemp-greenTemp)/delta)+4);
+		}
+		if(this.hue<0) this.hue=this.hue+360;
+		
 		this.result = result;
 		result.addObserver(this);
 		
@@ -354,6 +360,7 @@ class HSVColorMediator extends Object implements SliderObserver, ObserverIF {
 			else if(greenTemp==max) this.hue = 60 * (((blueTemp-redTemp)/delta)+2);
 			else this.hue = 60 * (((redTemp-greenTemp)/delta)+4);
 		}
+		if(this.hue<0) this.hue=this.hue+360;
 		
 		//Set la value des sliders selon la couleur(hue:valeur sur 360 et echelle de 255, saturation et value: echelle de 255)
 		hueCS.setValue((int)(this.hue/360*255));
