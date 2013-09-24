@@ -97,12 +97,17 @@ public class ColorDialog extends JDialog {
 		getContentPane().add(mainPanel, BorderLayout.CENTER);
 	}
 
+	/**
+	 * Methods that creates the RGB Panel containing the sliders
+	 **/
 	private JPanel createRGBPanel(ColorDialogResult result, int imageWidths) {
 		
 		rgbMediator = new RGBColorMediator(result, imageWidths, 30);
 		
 		JPanel panel = new JPanel();
 		panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+		
+		//Slider creation (the result pixel color is in RGB from 0 to 255)
 		ColorSlider csRed = new ColorSlider("R:", result.getPixel().getRed(), rgbMediator.getRedImage());
 		ColorSlider csGreen = new ColorSlider("G:", result.getPixel().getGreen(), rgbMediator.getGreenImage());
 		ColorSlider csBlue = new ColorSlider("B:", result.getPixel().getBlue(), rgbMediator.getBlueImage());
@@ -119,12 +124,17 @@ public class ColorDialog extends JDialog {
 		return panel;
 	}
 	
+	/**
+	 * Methods that creates the CMYK Panel containing the sliders
+	 **/
 	private JPanel createCMYKPanel(ColorDialogResult result, int imageWidths) {		
 	
 		cmykMediator = new CMYKColorMediator(result, imageWidths, 30);
 		
 		JPanel panel = new JPanel();
 		panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+		
+		//Creation du Slider (la couleur du result pixel est en CMYK en pourcentage et doit être mis sur une échelle de 255 (multiplication par 255) 
 		ColorSlider csCyan = new ColorSlider("C:", (int)(cmykMediator.getCyan()*255), cmykMediator.getCyanImage());
 		ColorSlider csMagenta = new ColorSlider("M:", (int)(cmykMediator.getMagenta()*255), cmykMediator.getMagentaImage());
 		ColorSlider csYellow = new ColorSlider("Y:", (int)(cmykMediator.getYellow()*255), cmykMediator.getYellowImage());
@@ -150,6 +160,10 @@ public class ColorDialog extends JDialog {
 		
 		JPanel panel = new JPanel();
 		panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+		
+		//Creation du Slider (la couleur du result pixel est en HSV de 0 a 360 pour le HUE et en pourcentage pour la SATURATION et la VALUE 
+		//Pour HUE, on doit le mettre en pourcentage(divise par 360) et ensuite le mettre sur une échelle de 255(multiplication pas 255)
+		//Pour SATURATION et VALUE, on doit le mettre sur une échelle de 255(multiplication pas 255)
 		ColorSlider csHue = new ColorSlider("H:", (int)((hsvMediator.getHue()/360)*255), hsvMediator.getHueImage());
 		ColorSlider csSaturation = new ColorSlider("S:", (int)(hsvMediator.getSaturation()*255), hsvMediator.getSaturationImage());
 		ColorSlider csValue = new ColorSlider("V:", (int)(hsvMediator.getValue()*255), hsvMediator.getValueImage());
