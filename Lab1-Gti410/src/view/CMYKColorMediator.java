@@ -41,9 +41,9 @@ class CMYKColorMediator extends Object implements SliderObserver, ObserverIF {
 		//Algorithme de conversion de la couleur RGB (0 a 1) vers CMYK (0 a 1)
 		this.dark = 1-Math.max(redTemp, Math.max(greenTemp, blueTemp));
 		if(this.dark==1){
-			this.cyan=(1-redTemp-this.dark);
-			this.magenta=(1-greenTemp-this.dark);
-			this.yellow=(1-blueTemp-this.dark);
+			this.cyan=(redTemp);
+			this.magenta=(greenTemp);
+			this.yellow=(blueTemp);
 		}
 		else{
 			this.cyan=(1-redTemp-this.dark)/(1-this.dark);
