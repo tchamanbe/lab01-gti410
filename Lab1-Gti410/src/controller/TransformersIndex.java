@@ -29,7 +29,7 @@ import java.awt.event.KeyEvent;
 public class TransformersIndex extends AbstractTransformer {
 	private Selector theSelector;
 	private RectangularRegionSelector theRectangularSelector;
-	private ImageLineFiller theFiller;
+	private ImageFiller theFiller;
 	private FilteringTransformer theFilter;
 	private Curves theCurves;
 	private Translation theTranslation;
@@ -57,7 +57,7 @@ public class TransformersIndex extends AbstractTransformer {
 		TransformersArray = new AbstractTransformer[idTransformersIndex][MaxEvtIdx+1];
 		theSelector = new Selector();
 		theRectangularSelector = new RectangularRegionSelector();
-		theFiller = new ImageLineFiller();
+		theFiller = new ImageFiller();
 		theFilter = new FilteringTransformer();
 		theCurves = new Curves();
 		theTranslation = new Translation();
@@ -133,7 +133,7 @@ public class TransformersIndex extends AbstractTransformer {
 	/**
 	 * @return
 	 */
-	public ImageLineFiller getTheFiller() {
+	public ImageFiller getTheFiller() {
 		return theFiller;
 	}
 	
