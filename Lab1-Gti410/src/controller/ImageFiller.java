@@ -38,24 +38,25 @@ public class ImageFiller extends AbstractTransformer {
 	private Pixel fillColor = new Pixel(0xFF00FFFF);
 	private Pixel colorToFill = new Pixel(0xFF00FFFF);
 	private Pixel borderColor = new Pixel(0xFFFFFF00);
-	private ArrayList<Pixel> borderColors = new ArrayList<Pixel>();
 	private boolean floodFill = true;
 	private int hueThreshold = 1;
 	private int saturationThreshold = 2;
 	private int valueThreshold = 3;
 	
-	private float borderRed;
-	private float borderGreen;
-	private float borderBlue;
 	private float borderHue;
 	private float borderSaturation;
 	private float borderValue;
+
+	private float currentHue;
+	private float currentSaturation;
+	private float currentValue;
 	
 	/**
 	 * Creates an ImageLineFiller with default parameters.
 	 * Default pixel change color is black.
 	 */
 	public ImageFiller() {
+		setBorderColor(borderColor);
 	}
 	
 	/* (non-Javadoc)
@@ -118,14 +119,60 @@ public class ImageFiller extends AbstractTransformer {
 	private void boundaryFill(int x , int y) {
 		if(0 <= x && x < currentImage.getImageWidth() &&
 				0 <= y && y < currentImage.getImageWidth() &&
-					!currentImage.getPixel(x,y).equals(borderColor) 
-						&& !currentImage.getPixel(x,y).equals(fillColor) ){
+					!currentImage.getPixel(x,y).equals(fillColor) &&
+						!inThresholdRange(currentImage.getPixel(x,y))){
 			currentImage.setPixel(x,y, fillColor);
 			boundaryFill(x+1,y);
 			boundaryFill(x-1,y);
 			boundaryFill(x,y+1);
 			boundaryFill(x,y-1);
 		}
+	}
+	
+	/**
+	 * Methods that returns if the current pixel is in the thresold range
+	 * @return boolean
+	 */
+	private boolean inThresholdRange(Pixel current){		
+		//Conversion du result (RGB) en valeur en pourcentage (de 0 a 1 au lieu de 0 a 255)
+		float currentRed = (float)current.getRed()/255;
+		float currentGreen = (float)current.getGreen()/255;
+		float currentBlue = (float)current.getBlue()/255;
+		
+		//Determination de certaines valeurs requisent pour l'algorithme de convertion
+		float max = Math.max(currentRed,Math.max(currentGreen,currentBlue));
+		float min = Math.min(currentRed,Math.min(currentGreen,currentBlue));
+		float delta = max - min;
+		
+		//Algorithme de conversion de la couleur RGB (pourcentage) vers HSV (0 a 360 pour H, pourcentage pour s et v)
+		currentValue = max;
+		if(delta==0){
+			currentSaturation = 0;
+		}
+		else{
+			currentSaturation = delta/max;
+		}
+		if(delta==0){
+			currentHue=0;
+		}
+		else{
+			if(currentRed==max) currentHue = 60 * (((currentGreen-currentBlue)/delta)%6);
+			else if(currentGreen==max) currentHue = 60 * (((currentBlue-currentRed)/delta)+2);
+			else currentHue = 60 * (((currentRed-currentGreen)/delta)+4);
+		}
+		if(currentHue<0) currentHue=currentHue+360;
+		
+		float rangeHue = Math.abs(borderHue-currentHue);
+		if(rangeHue>180){
+			rangeHue = 360-rangeHue;
+		}
+		float rangeSat = Math.abs(borderSaturation-currentSaturation)*255;
+		float rangeVal = Math.abs(borderValue-currentValue)*255;
+		
+		if(rangeHue<=getHueThreshold() && rangeSat<=getSaturationThreshold() && rangeVal<=getValueThreshold()){
+			return true;
+		}
+		return false;
 	}
 	
 	/**
@@ -149,9 +196,9 @@ public class ImageFiller extends AbstractTransformer {
 		borderColor = pixel;
 		
 		//Conversion du result (RGB) en valeur en pourcentage (de 0 a 1 au lieu de 0 a 255)
-		borderRed = (float)borderColor.getRed()/255;
-		borderGreen = (float)borderColor.getGreen()/255;
-		borderBlue = (float)borderColor.getBlue()/255;
+		float borderRed = (float)borderColor.getRed()/255;
+		float borderGreen = (float)borderColor.getGreen()/255;
+		float borderBlue = (float)borderColor.getBlue()/255;
 		
 		//Determination de certaines valeurs requisent pour l'algorithme de convertion
 		float max = Math.max(borderRed,Math.max(borderGreen,borderBlue));
