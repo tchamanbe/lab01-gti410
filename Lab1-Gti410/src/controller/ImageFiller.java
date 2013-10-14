@@ -68,6 +68,7 @@ public class ImageFiller extends AbstractTransformer {
 		List intersectedObjects = Selector.getDocumentObjectsAtLocation(e.getPoint());
 		if (!intersectedObjects.isEmpty()) {
 			Shape shape = (Shape)intersectedObjects.get(0);
+			//gets the current shape
 			if (shape instanceof ImageX) {
 				currentImage = (ImageX)shape;
 
@@ -80,13 +81,17 @@ public class ImageFiller extends AbstractTransformer {
 					return false;
 				}
 				ptTransformed.translate(-currentImage.getPosition().x, -currentImage.getPosition().y);
+				//If point clicked is in the current image range
 				if (0 <= ptTransformed.x && ptTransformed.x < currentImage.getImageWidth() &&
 				    0 <= ptTransformed.y && ptTransformed.y < currentImage.getImageHeight()) {
 					currentImage.beginPixelUpdate();
+					//gets the color of the current pixel clicked
 					colorToFill = currentImage.getPixel(ptTransformed.x,ptTransformed.y);
+					//if in the floodFill mode and the color to fill is not equal to the fill color, begin the flood fill
 					if(isFloodFill() && !colorToFill.equals(fillColor)){						
 						floodFill(ptTransformed.x, ptTransformed.y);
 					}
+					//if in the boundaryFill mode and the color to fill is not equal to the fill color, begin the boundary fill
 					else if(!isFloodFill() && !colorToFill.equals(fillColor)){
 						boundaryFill(ptTransformed.x, ptTransformed.y);
 					}
@@ -99,13 +104,16 @@ public class ImageFiller extends AbstractTransformer {
 	}
 
 	/**
-	 * Flood fill with specified color
+	 * Flood fill with specified color (recursive method)
 	 */
 	private void floodFill(int x , int y) {
+		//If the current position is in the image range and if the color of the current pixel equals to the color to fill
 		if(0 <= x && x < currentImage.getImageWidth() &&
 				0 <= y && y < currentImage.getImageWidth() &&
 					currentImage.getPixel(x,y).equals(colorToFill)){
+			//set the current pixel with the fill color
 			currentImage.setPixel(x,y, fillColor);
+			//recursive call for the 4 pixel neighbors (4-way)
 			floodFill(x+1,y);
 			floodFill(x-1,y);
 			floodFill(x,y+1);
@@ -114,14 +122,18 @@ public class ImageFiller extends AbstractTransformer {
 	}
 	
 	/**
-	 * boundary fill with specified color
+	 * boundary fill with specified color (recursive method)
 	 */
 	private void boundaryFill(int x , int y) {
+		//If the current position is in the image range and if the color of the current pixel is not equal to the fill color
+		//and if the current pixel color is not in the thresoldRange (see inThresholdRange method)
 		if(0 <= x && x < currentImage.getImageWidth() &&
 				0 <= y && y < currentImage.getImageWidth() &&
 					!currentImage.getPixel(x,y).equals(fillColor) &&
 						!inThresholdRange(currentImage.getPixel(x,y))){
+			//set the current pixel with the fill color
 			currentImage.setPixel(x,y, fillColor);
+			//recursive call for the 4 pixel neighbors (4-way)
 			boundaryFill(x+1,y);
 			boundaryFill(x-1,y);
 			boundaryFill(x,y+1);
@@ -130,7 +142,7 @@ public class ImageFiller extends AbstractTransformer {
 	}
 	
 	/**
-	 * Methods that returns if the current pixel is in the thresold range
+	 * Methods that returns if the current pixel is in the threshold range
 	 * @return boolean
 	 */
 	private boolean inThresholdRange(Pixel current){		
@@ -162,6 +174,7 @@ public class ImageFiller extends AbstractTransformer {
 		}
 		if(currentHue<0) currentHue=currentHue+360;
 		
+		//Calcule du range pour le Hue, le Sat et le Val
 		float rangeHue = Math.abs(borderHue-currentHue);
 		if(rangeHue>180){
 			rangeHue = 360-rangeHue;
@@ -169,6 +182,7 @@ public class ImageFiller extends AbstractTransformer {
 		float rangeSat = Math.abs(borderSaturation-currentSaturation)*255;
 		float rangeVal = Math.abs(borderValue-currentValue)*255;
 		
+		//Si tout les ranges sont égals ou inférieur au range spécifier avec les sliders alors retourne true, sinon retourne false
 		if(rangeHue<=getHueThreshold() && rangeSat<=getSaturationThreshold() && rangeVal<=getValueThreshold()){
 			return true;
 		}
