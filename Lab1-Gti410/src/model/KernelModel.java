@@ -39,7 +39,7 @@ public class KernelModel extends Observable{
 	/**
 	 * 
 	 */
-	public final static String[] FILTER_TYPE_ARRAY = {"Custom", "Mean", "Gaussian", "4-Neighbour Laplacian", "8-Neighbour Laplacian", "Prewitt Horiz", "Prewitt Vert", "Sobel Horiz", "Sobel Vert", "Roberts 45 degrees", "Roberts -45 degrees"};
+	public final static String[] FILTER_TYPE_ARRAY = {"Custom", "Mean", "Gaussian", "4-Neighbour Laplacian", "8-Neighbour Laplacian", "Sobel x", "Sobel y"};
 	/**
 	 * 
 	 */

@@ -19,28 +19,29 @@ import java.util.List;
 
 import model.ImageDouble;
 import model.ImageX;
+import model.KernelModel;
+import model.Pixel;
+import model.PixelDouble;
 import model.Shape;
 
 /**
  * 
  * <p>Title: FilteringTransformer</p>
  * <p>Description: ... (AbstractTransformer)</p>
- * <p>Copyright: Copyright (c) 2004 Sébastien Bois, Eric Paquette</p>
- * <p>Company: (ÉTS) - École de Technologie Supérieure</p>
+ * <p>Copyright: Copyright (c) 2004 Sï¿½bastien Bois, Eric Paquette</p>
+ * <p>Company: (ï¿½TS) - ï¿½cole de Technologie Supï¿½rieure</p>
  * @author unascribed
  * @version $Revision: 1.6 $
  */
 public class FilteringTransformer extends AbstractTransformer{
-	Filter filter = new MeanFilter3x3(new PaddingZeroStrategy(), new ImageClampStrategy());
+	CustomFilter3x3 filter = new CustomFilter3x3( new PaddingZeroStrategy(), new ImageClampStrategy() );
 	
 	/**
 	 * @param _coordinates
 	 * @param _value
 	 */
 	public void updateKernel(Coordinates _coordinates, float _value) {
-		System.out.println("[" + (_coordinates.getColumn() - 1) + "]["
-                                   + (_coordinates.getRow() - 1) + "] = " 
-                                   + _value);
+		filter.updateKernel( _coordinates, _value );
 	}
 		
 	/**
@@ -75,16 +76,77 @@ public class FilteringTransformer extends AbstractTransformer{
 	public int getID() { return ID_FILTER; }
 
 	/**
-	 * @param string
+	 * Sets the image border strategy according to the choice made in the GUI
+	 * Uses Zero-padding as default value when a selected choice is not implemented
+	 * @param string The border strategy name
 	 */
 	public void setBorder(String string) {
 		System.out.println(string);
+		int index = 0;
+		for (int i = 0; i < KernelModel.HANDLING_BORDER_ARRAY.length; ++i) {
+			if (string.equals(KernelModel.HANDLING_BORDER_ARRAY[i])) {
+				index = i;
+			}
+		}
+		
+		switch ( index ) {
+		case 0:
+			System.out.println("Using Zero-padding strategy (#0)");
+			this.filter.setPaddingStrategy( new PaddingZeroStrategy() );
+			break;
+		//case 1:
+		//	System.out.println("None (1)");
+		//	break;
+		//case 2:
+		//	System.out.println("copy (2)");
+		//	break;
+		case 3:
+			System.out.println("Using Mirror-padding strategy (#3)");
+			this.filter.setPaddingStrategy( new PaddingMirrorStrategy() );
+			break;
+			
+		//case 4:
+		//	System.out.println("Circular (4)");
+		//	break;
+
+		default:
+			System.out.println("Choice not implemented : using Zero-padding strategy");
+			this.filter.setPaddingStrategy( new PaddingZeroStrategy() );
+			break;
+		}
+		
 	}
 
 	/**
-	 * @param string
+	 * Sets the image value clamping strategy according to the choice made in the GUI
+	 * Uses CLAMP 0-255 as default value when a selected choice is not implemented
+	 * @param string The clamp strategy name
 	 */
 	public void setClamp(String string) {
 		System.out.println(string);
+		int index = 0;
+		for (int i = 0; i < KernelModel.CLAMP_ARRAY.length; ++i) {
+			if (string.equals(KernelModel.CLAMP_ARRAY[i])) {
+				index = i;
+			}
+		}
+		
+		switch ( index ) {
+		case 0:
+			// Clamp 0-255
+			System.out.println("Using Clamp 0-255 strategy (#0)");
+			this.filter.setImageConversionStrategy( new ImageClampStrategy() );
+			break;
+
+		case 3:
+			// Normalize 0-255
+			System.out.println("Using Normalize 0-255 strategy (#3)");
+			this.filter.setImageConversionStrategy( new ImageNormalizeStrategy() );
+			break;
+		default:
+			System.out.println("Choice not implemented : using Clamp 0-255 strategy");
+			this.filter.setImageConversionStrategy( new ImageClampStrategy() );
+			break;
+		}
 	}
 }

@@ -64,5 +64,7 @@ public class Filter {
 	public ImageConversionStrategy getImageConversionStrategy() {
 		return conversionStrategy;
 	}
+
+	public void updateKernel(Coordinates coordinates, float value) {}
 	
 }
