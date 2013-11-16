@@ -17,17 +17,18 @@ package controller;
 import java.awt.event.MouseEvent;
 import java.util.List;
 
-import view.Application;
-import view.CurvesPanel;
-
+import model.BSplineCurveType;
 import model.BezierCurveType;
 import model.ControlPoint;
 import model.Curve;
 import model.CurvesModel;
 import model.DocObserver;
 import model.Document;
+import model.HermiteCurveType;
 import model.PolylineCurveType;
 import model.Shape;
+import view.Application;
+import view.CurvesPanel;
 
 /**
  * <p>Title: Curves</p>
@@ -104,6 +105,10 @@ public class Curves extends AbstractTransformer implements DocObserver {
 			curve.setCurveType(new BezierCurveType(CurvesModel.BEZIER));
 		} else if (string == CurvesModel.LINEAR) {
 			curve.setCurveType(new PolylineCurveType(CurvesModel.LINEAR));
+		} else if (string == CurvesModel.HERMITE) {
+			curve.setCurveType(new HermiteCurveType(CurvesModel.LINEAR));
+		} else if (string == CurvesModel.BSPLINE) {
+			curve.setCurveType(new BSplineCurveType(CurvesModel.LINEAR));
 		} else {
 			System.out.println("Curve type [" + string + "] is unknown.");
 		}
