@@ -38,7 +38,7 @@ public class Matrix {
 		return m;
 	}
 	
-	public static List buildRowVector4(double v0, double v1, double v2, int v3) {
+	public static List buildRowVector4(double v0, double v1, double v2, double v3) {
 		List m = new ArrayList(1);
 		List r0 = new ArrayList(4);
 		m.add(r0);
