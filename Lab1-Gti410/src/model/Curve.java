@@ -169,7 +169,8 @@ public class Curve extends ShapeContainer implements ColoredShapeIF {
 		notifyObservers();
 	}
 
-    public void recomputeLineSegments() {
+    @SuppressWarnings("unchecked")
+	public void recomputeLineSegments() {
     	// This is an exceptional case where we need to transform the points while we are not displaying them.
     	// This is needed because on display we display the line sections that are computed from the points, so the 
     	// sections will only be affected if they are computed from the transformed control points.
