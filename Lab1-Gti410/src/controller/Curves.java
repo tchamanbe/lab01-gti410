@@ -122,7 +122,40 @@ public class Curves extends AbstractTransformer implements DocObserver {
 				Shape s = (Shape)selectedObjects.get(0);
 				if (curve.getShapes().contains(s)){
 					int controlPointIndex = curve.getShapes().indexOf(s);
-					System.out.println("Try to apply G1 continuity on control point [" + controlPointIndex + "]");
+					if(controlPointIndex!=0 && controlPointIndex!=curve.getShapes().size()-1){
+						ControlPoint pBefore = (ControlPoint) curve.getShapes().get(controlPointIndex-1);
+						ControlPoint pCurrent = (ControlPoint) curve.getShapes().get(controlPointIndex);
+						ControlPoint pAfter = (ControlPoint) curve.getShapes().get(controlPointIndex+1);
+						double t = pAfter.getAffineTransform().getTranslateX();
+						double j = pAfter.getAffineTransform().getTranslateY();
+						double xB = pBefore.getCenter().getX();
+						double yB = pBefore.getCenter().getY();
+						double xC = pCurrent.getCenter().getX();
+						double yC = pCurrent.getCenter().getY();
+						double xA = pAfter.getCenter().getX();
+						double yA = pAfter.getCenter().getY();
+						
+						double distance = Math.sqrt(((xA-xC)*(xA-xC))+((yA-yC)*(yA-yC)));
+						double angle = Math.atan((yC-yB)/(xC-xB));	
+						double newX = 0;
+						double newY = 0;
+						
+						if( ((xC-xB)>=0 && (xC-xA)>=0)||((xC-xB)>=0 && (xC-xA)<=0) ){
+							newX = xC + Math.abs(distance*Math.cos(angle));
+						}
+						else if( ((xC-xB)<=0 && (xC-xA)>=0) ||((xC-xB)<=0 && (xC-xA)<=0)){
+							newX = xC - Math.abs(distance*Math.cos(angle));
+						}
+						
+						if( ((yC-yB)>=0 && (yC-yA)>=0)||((yC-yB)>=0 && (yC-yA)<=0) ){
+							newY = yC + Math.abs(distance*Math.sin(angle));
+						}
+						else if( ((yC-yB)<=0 && (yC-yA)>=0) ||((yC-yB)<=0 && (yC-yA)<=0)){
+							newY = yC - Math.abs(distance*Math.sin(angle));
+						}
+					
+						pAfter.setCenter(newX, newY);
+					}
 				}
 			}
 			
@@ -137,7 +170,38 @@ public class Curves extends AbstractTransformer implements DocObserver {
 				Shape s = (Shape)selectedObjects.get(0);
 				if (curve.getShapes().contains(s)){
 					int controlPointIndex = curve.getShapes().indexOf(s);
-					System.out.println("Try to apply C1 continuity on control point [" + controlPointIndex + "]");
+					if(controlPointIndex!=0 && controlPointIndex!=curve.getShapes().size()-1){
+						ControlPoint pBefore = (ControlPoint) curve.getShapes().get(controlPointIndex-1);
+						ControlPoint pCurrent = (ControlPoint) curve.getShapes().get(controlPointIndex);
+						ControlPoint pAfter = (ControlPoint) curve.getShapes().get(controlPointIndex+1);
+						double xB = pBefore.getCenter().getX();
+						double yB = pBefore.getCenter().getY();
+						double xC = pCurrent.getCenter().getX();
+						double yC = pCurrent.getCenter().getY();
+						double xA = pAfter.getCenter().getX();
+						double yA = pAfter.getCenter().getY();
+						
+						double distance = Math.sqrt(((xB-xC)*(xB-xC))+((yB-yC)*(yB-yC)));
+						double angle = Math.atan((yC-yB)/(xC-xB));	
+						double newX = 0;
+						double newY = 0;
+						
+						if( ((xC-xB)>=0 && (xC-xA)>=0)||((xC-xB)>=0 && (xC-xA)<=0) ){
+							newX = xC + Math.abs(distance*Math.cos(angle));
+						}
+						else if( ((xC-xB)<=0 && (xC-xA)>=0) ||((xC-xB)<=0 && (xC-xA)<=0)){
+							newX = xC - Math.abs(distance*Math.cos(angle));
+						}
+						
+						if( ((yC-yB)>=0 && (yC-yA)>=0)||((yC-yB)>=0 && (yC-yA)<=0) ){
+							newY = yC + Math.abs(distance*Math.sin(angle));
+						}
+						else if( ((yC-yB)<=0 && (yC-yA)>=0) ||((yC-yB)<=0 && (yC-yA)<=0)){
+							newY = yC - Math.abs(distance*Math.sin(angle));
+						}
+					
+						pAfter.setCenter(newX, newY);
+					}
 				}
 			}
 			
