@@ -126,8 +126,7 @@ public class Curves extends AbstractTransformer implements DocObserver {
 						ControlPoint pBefore = (ControlPoint) curve.getShapes().get(controlPointIndex-1);
 						ControlPoint pCurrent = (ControlPoint) curve.getShapes().get(controlPointIndex);
 						ControlPoint pAfter = (ControlPoint) curve.getShapes().get(controlPointIndex+1);
-						double t = pAfter.getAffineTransform().getTranslateX();
-						double j = pAfter.getAffineTransform().getTranslateY();
+
 						double xB = pBefore.getCenter().getX();
 						double yB = pBefore.getCenter().getY();
 						double xC = pCurrent.getCenter().getX();
